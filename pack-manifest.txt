@@ -1,0 +1,37 @@
+# .NET Agents Pack manifest v1.0.0
+# component|path relative to repo-template
+core|AGENTS.md
+core|docs/ai/project-map.md
+core|docs/ai/architecture.md
+core|docs/ai/database.md
+core|docs/ai/domain-glossary.md
+core|docs/ai/recurring-bugs.md
+core|docs/ai/runbook.md
+core|.codex/agents/repo-explorer.toml
+core|.codex/agents/dotnet-implementer.toml
+core|.codex/agents/test-guardian.toml
+core|.codex/agents/change-reviewer.toml
+core|.agents/skills/bootstrap-dotnet-repo/SKILL.md
+core|.agents/skills/bootstrap-dotnet-repo/scripts/inspect-dotnet-repo.ps1
+core|.agents/skills/bootstrap-dotnet-repo/scripts/inspect-dotnet-repo.sh
+core|.agents/skills/bugfix-dotnet/SKILL.md
+core|.agents/skills/feature-slice-dotnet/SKILL.md
+core|.agents/skills/legacy-refactor-dotnet/SKILL.md
+core|.agents/skills/pr-review-dotnet/SKILL.md
+core|.agents/skills/maintain-agent-memory/SKILL.md
+core|prompts/00-bootstrap-repo.md
+core|prompts/01-bugfix.md
+core|prompts/02-feature-slice.md
+core|prompts/04-pr-review.md
+core|prompts/05-refactor-legado.md
+core|prompts/06-update-agent-memory.md
+core|prompts/07-investigate-only.md
+web|.codex/agents/frontend-web.toml
+sqlserver|.codex/agents/database-sqlserver.toml
+sqlserver|.agents/skills/db-change-sqlserver/SKILL.md
+sqlserver|prompts/03-db-change.md
+quality|.codex/agents/security-reviewer.toml
+quality|.codex/agents/performance-reviewer.toml
+quality|.codex/agents/release-reviewer.toml
+quality|.agents/skills/security-review-dotnet/SKILL.md
+quality|.agents/skills/performance-review-dotnet/SKILL.md

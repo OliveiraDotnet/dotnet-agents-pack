@@ -1,0 +1,17 @@
+# Local and generated files
+.DS_Store
+Thumbs.db
+*.user
+*.suo
+
+# Build and test artifacts
+[Bb]in/
+[Oo]bj/
+TestResults/
+coverage/
+
+# Secrets and local configuration
+.env
+.env.*
+*.pfx
+*.snk
