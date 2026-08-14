@@ -1,0 +1,4 @@
+interface:
+  display_name: "Update Agent Pack"
+  short_description: "Safely reconcile an installed Agent Pack"
+  default_prompt: "Use $update-agent-pack to safely reconcile this repository with the latest Agent Pack."

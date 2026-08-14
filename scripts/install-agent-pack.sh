@@ -2,7 +2,7 @@
 set -euo pipefail
 
 usage() {
-  echo "Usage: bash ./scripts/install-agent-pack.sh REPO_PATH [--profile core,web,sqlserver,quality] [--install-global] [--allow-non-git] [--force] [--dry-run]"
+  echo "Usage: bash ./scripts/install-agent-pack.sh REPO_PATH [--profile core,web,sqlserver,quality] [--include-claude] [--include-grok-build] [--install-global] [--allow-non-git] [--force] [--dry-run]"
 }
 
 if [ "$#" -lt 1 ]; then
@@ -13,6 +13,8 @@ fi
 repo_input="$1"
 shift
 profiles=(core)
+include_claude=false
+include_grok_build=false
 install_global=false
 allow_non_git=false
 force=false
@@ -28,6 +30,8 @@ while [ "$#" -gt 0 ]; do
       done
       shift 2
       ;;
+    --include-claude) include_claude=true; shift ;;
+    --include-grok-build) include_grok_build=true; shift ;;
     --install-global) install_global=true; shift ;;
     --allow-non-git) allow_non_git=true; shift ;;
     --force) force=true; shift ;;
@@ -71,10 +75,10 @@ valid_profile() {
   case "$1" in core|web|sqlserver|quality) return 0 ;; *) return 1 ;; esac
 }
 
-contains_profile() {
+contains_component() {
   local needle="$1"
-  for profile in "${profiles[@]}"; do
-    [ "$profile" = "$needle" ] && return 0
+  for component in "${components[@]}"; do
+    [ "$component" = "$needle" ] && return 0
   done
   return 1
 }
@@ -87,6 +91,18 @@ for profile in "${profiles[@]}"; do
   [ "$seen" = true ] || unique_profiles+=("$profile")
 done
 profiles=("${unique_profiles[@]}")
+
+components=("${profiles[@]}")
+if [ "$include_claude" = true ]; then
+  for profile in "${profiles[@]}"; do
+    components+=("claude-$profile")
+  done
+fi
+if [ "$include_grok_build" = true ]; then
+  for profile in "${profiles[@]}"; do
+    components+=("grok-$profile")
+  done
+fi
 
 same_content() { cmp -s "$1" "$2"; }
 backup_path() {
@@ -138,16 +154,47 @@ add_action() {
   action_original+=("$destination")
 }
 
-while IFS='|' read -r component relative; do
-  component="${component//[[:space:]]/}"
-  relative="${relative# }"
+trim() {
+  local value="$1"
+  value="${value#"${value%%[![:space:]]*}"}"
+  value="${value%"${value##*[![:space:]]}"}"
+  printf '%s' "$value"
+}
+
+valid_relative_path() {
+  local path="$1"
+  [ -n "$path" ] || return 1
+  case "$path" in
+    /*|*\\*|[A-Za-z]:*|..|../*|*/..|*/../*) return 1 ;;
+    *) return 0 ;;
+  esac
+}
+
+while IFS= read -r line || [ -n "$line" ]; do
+  line="$(trim "$line")"
+  [ -n "$line" ] || continue
+  [[ "$line" = \#* ]] && continue
+
+  separators="${line//[^|]/}"
+  [ "${#separators}" -ge 1 ] && [ "${#separators}" -le 2 ] || { echo "Invalid manifest line: $line" >&2; exit 1; }
+
+  IFS='|' read -r component source_relative destination_relative <<< "$line"
+  component="$(trim "$component")"
+  source_relative="$(trim "$source_relative")"
+  destination_relative="$(trim "${destination_relative:-}")"
+  [ "${#separators}" -eq 2 ] || destination_relative="$source_relative"
+
   [ -n "$component" ] || continue
-  [[ "$component" = \#* ]] && continue
-  contains_profile "$component" || continue
-  source="$TEMPLATE_ROOT/$relative"
-  destination="$REPO_ROOT/$relative"
-  is_within "$TEMPLATE_ROOT" "$source" || { echo "Manifest source escapes template: $relative" >&2; exit 1; }
-  is_within "$REPO_ROOT" "$destination" || { echo "Manifest destination escapes repository: $relative" >&2; exit 1; }
+  [ -n "$source_relative" ] || { echo "Invalid manifest line: $line" >&2; exit 1; }
+  [ -n "$destination_relative" ] || { echo "Invalid manifest line: $line" >&2; exit 1; }
+  contains_component "$component" || continue
+  valid_relative_path "$source_relative" || { echo "Manifest source path escapes template: $source_relative" >&2; exit 1; }
+  valid_relative_path "$destination_relative" || { echo "Manifest destination path escapes repository: $destination_relative" >&2; exit 1; }
+
+  source="$TEMPLATE_ROOT/$source_relative"
+  destination="$REPO_ROOT/$destination_relative"
+  is_within "$TEMPLATE_ROOT" "$source" || { echo "Manifest source path escapes template: $source_relative" >&2; exit 1; }
+  is_within "$REPO_ROOT" "$destination" || { echo "Manifest destination path escapes repository: $destination_relative" >&2; exit 1; }
   add_action "$source" "$destination"
 done < "$MANIFEST"
 
@@ -157,6 +204,8 @@ if [ "$install_global" = true ]; then
 fi
 
 echo "Installing .NET Agents Pack profiles: ${profiles[*]}"
+[ "$include_claude" = true ] && echo "Claude project support enabled."
+[ "$include_grok_build" = true ] && echo "Grok Build project support enabled."
 [ "$dry_run" = true ] && echo "Dry-run enabled: no files will be written."
 
 copy_count=0

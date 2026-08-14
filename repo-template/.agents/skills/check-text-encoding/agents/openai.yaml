@@ -1,0 +1,4 @@
+interface:
+  display_name: "Check Text Encoding"
+  short_description: "Detect UTF-8 errors and likely mojibake"
+  default_prompt: "Use $check-text-encoding to scan changed text files for invalid UTF-8 or likely mojibake."

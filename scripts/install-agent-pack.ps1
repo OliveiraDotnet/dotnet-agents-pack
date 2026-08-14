@@ -6,6 +6,8 @@ param(
 
     [string[]]$Profile = @(),
 
+    [switch]$IncludeClaude,
+    [switch]$IncludeGrokBuild,
     [switch]$InstallGlobal,
     [switch]$AllowNonGit,
     [switch]$Force,
@@ -154,9 +156,12 @@ if (-not $AllowNonGit) {
         throw "RepoPath is not a Git repository root. Pass -AllowNonGit only when this is intentional."
     }
 
-    $gitRootCanonical = Get-CanonicalDirectory -Path $gitRoot.Trim() -Label "Git root"
-    if ($gitRootCanonical -ne $repoRoot) {
-        throw "RepoPath must be the Git root, not a subdirectory: $gitRootCanonical"
+    $gitPrefix = & git -C $repoRoot rev-parse --show-prefix 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to validate RepoPath against its Git root: $repoRoot"
+    }
+    if ($gitPrefix) {
+        throw "RepoPath must be the Git root, not a subdirectory: $($gitRoot.Trim())"
     }
 }
 
@@ -180,21 +185,37 @@ foreach ($requestedProfile in $requestedProfiles) {
     }
 }
 
+$requestedComponents = New-Object System.Collections.Generic.List[string]
+foreach ($requestedProfile in $requestedProfiles) {
+    $requestedComponents.Add($requestedProfile)
+    if ($IncludeClaude) {
+        $requestedComponents.Add("claude-$requestedProfile")
+    }
+    if ($IncludeGrokBuild) {
+        $requestedComponents.Add("grok-$requestedProfile")
+    }
+}
+
 Get-Content -LiteralPath $ManifestPath | ForEach-Object {
     $line = $_.Trim()
     if (-not $line -or $line.StartsWith("#")) { return }
 
-    $parts = $line -split '\|', 2
-    if ($parts.Count -ne 2) { throw "Invalid manifest line: $line" }
+    $parts = $line -split '\|'
+    if ($parts.Count -notin 2, 3) { throw "Invalid manifest line: $line" }
 
     $component = $parts[0].Trim().ToLowerInvariant()
-    $relativePath = $parts[1].Trim()
-    if ($requestedProfiles -notcontains $component) { return }
+    $sourceRelativePath = $parts[1].Trim()
+    $destinationRelativePath = if ($parts.Count -eq 3) { $parts[2].Trim() } else { $sourceRelativePath }
+    if (-not $component -or -not $sourceRelativePath -or -not $destinationRelativePath) { throw "Invalid manifest line: $line" }
+    if ($requestedComponents -notcontains $component) { return }
 
-    $source = [IO.Path]::GetFullPath((Join-Path $templateRootCanonical $relativePath))
-    $destination = [IO.Path]::GetFullPath((Join-Path $repoRoot $relativePath))
-    if (-not (Test-PathWithin $templateRootCanonical $source) -or -not (Test-PathWithin $repoRoot $destination)) {
-        throw "Manifest path escapes its root: $relativePath"
+    $source = [IO.Path]::GetFullPath((Join-Path $templateRootCanonical $sourceRelativePath))
+    $destination = [IO.Path]::GetFullPath((Join-Path $repoRoot $destinationRelativePath))
+    if (-not (Test-PathWithin $templateRootCanonical $source)) {
+        throw "Manifest source path escapes the template root: $sourceRelativePath"
+    }
+    if (-not (Test-PathWithin $repoRoot $destination)) {
+        throw "Manifest destination path escapes the repository root: $destinationRelativePath"
     }
 
     Add-CopyAction -Source $source -Destination $destination
@@ -207,6 +228,8 @@ if ($InstallGlobal) {
 }
 
 Write-Host "Installing .NET Agents Pack profiles: $($requestedProfiles -join ', ')"
+if ($IncludeClaude) { Write-Host "Claude project support enabled." }
+if ($IncludeGrokBuild) { Write-Host "Grok Build project support enabled." }
 if ($DryRun) { Write-Host "Dry-run enabled: no files will be written." }
 
 foreach ($action in $Actions) {

@@ -1,6 +1,6 @@
 ---
 name: maintain-agent-memory
-description: Update durable repository guidance after a verified lesson, recurring bug, command discovery, or architecture decision. Use when Codex needs to keep AGENTS.md or docs/ai accurate without changing production code.
+description: Update durable repository guidance after a verified lesson, recurring bug, command discovery, or architecture decision. Use when a coding agent needs to keep AGENTS.md or docs/ai accurate without changing production code.
 ---
 
 # Maintain repository memory

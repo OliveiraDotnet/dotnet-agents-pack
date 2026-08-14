@@ -1,6 +1,6 @@
 ---
 name: bootstrap-dotnet-repo
-description: Inspect and bootstrap a .NET repository without changing production code. Use when Codex needs to discover repository shape, SDK-style or classic projects, confirmed commands, tests, data access, and applicable pack profiles before work begins.
+description: Inspect and bootstrap a .NET repository without changing production code. Use when a coding agent needs to discover repository shape, SDK-style or classic projects, confirmed commands, tests, data access, and applicable pack profiles before work begins.
 ---
 
 # Bootstrap a .NET repository
