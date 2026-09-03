@@ -1048,6 +1048,23 @@ function Get-ReconcilePlan {
             elseif ($acceptPack -and $status.Kind -eq "file") {
                 $actions.Add((New-PlanAction -Type "RETIRE" -ArtifactId $compatEntry.Id -Destination $compatEntry.Destination -DestinationFull $compatEntry.DestinationFull -Ownership "managed" -Reason "legacy pack removal explicitly accepted" -Conflict $false -CurrentKind $status.Kind -CurrentHash $status.Hash)) | Out-Null
             }
+            elseif ($status.Kind -eq "file") {
+                $trustedLegacy = $false
+                if ($Compatibility.ByArtifact.ContainsKey($compatEntry.Id)) {
+                    foreach ($historical in $Compatibility.ByArtifact[$compatEntry.Id]) {
+                        if ($historical.Destination -eq $compatEntry.Destination -and $historical.Hash -eq $status.Hash) {
+                            $trustedLegacy = $true
+                            break
+                        }
+                    }
+                }
+                if ($trustedLegacy) {
+                    $actions.Add((New-PlanAction -Type "RETIRE" -ArtifactId $compatEntry.Id -Destination $compatEntry.Destination -DestinationFull $compatEntry.DestinationFull -Ownership "managed" -Reason "unchanged legacy artifact matches trusted release $($compatEntry.Version)" -Conflict $false -CurrentKind $status.Kind -CurrentHash $status.Hash)) | Out-Null
+                }
+                else {
+                    $actions.Add((New-PlanAction -Type "CONFLICT" -ArtifactId $compatEntry.Id -Destination $compatEntry.Destination -DestinationFull $compatEntry.DestinationFull -Ownership "managed" -Reason "legacy-only artifact requires explicit AcceptPack or KeepLocal because historical ownership is unavailable" -Conflict $true -CurrentKind $status.Kind -CurrentHash $status.Hash)) | Out-Null
+                }
+            }
             else {
                 $actions.Add((New-PlanAction -Type "CONFLICT" -ArtifactId $compatEntry.Id -Destination $compatEntry.Destination -DestinationFull $compatEntry.DestinationFull -Ownership "managed" -Reason "legacy-only artifact requires explicit AcceptPack or KeepLocal because historical ownership is unavailable" -Conflict $true -CurrentKind $status.Kind -CurrentHash $status.Hash)) | Out-Null
             }

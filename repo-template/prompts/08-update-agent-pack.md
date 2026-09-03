@@ -1,21 +1,21 @@
-# Atualizar o Agent Pack deste repositório
+# Update the Agent Pack in this repository
 
-Use `$update-agent-pack` no Codex, `/update-agent-pack` no Claude Code ou a skill nativa `update-agent-pack` no Grok Build.
+Use `$update-agent-pack` in Codex, `/update-agent-pack` in Claude Code, or the native `update-agent-pack` skill in Grok Build.
 
-Se o objetivo for retirar Claude e adotar Codex+Grok, use primeiro `prompts/09-migrate-claude-to-codex-grok.md`.
+If the goal is to remove Claude and adopt Codex + Grok, start with `prompts/09-migrate-claude-to-codex-grok.md`.
 
-## Origem confiável
+## Trusted source
 
-- Caminho do Agent Pack atualizado ou variável `AGENT_PACK_HOME`:
-- Integrações desejadas, se houver mudança explícita (exemplo: `codex,grok`):
+- Path to the updated Agent Pack or `AGENT_PACK_HOME`:
+- Desired integrations if they must change (example: `codex,grok`):
 
-## Objetivo
+## Goal
 
-1. Gerar e explicar o plano antes de escrever.
-2. Preservar regras, fatos, comandos e customizações específicas deste repositório.
-3. Adicionar, atualizar, renomear ou aposentar somente artefatos cuja propriedade seja comprovada pelo estado ou catálogo de compatibilidade.
-4. Resolver conflitos por artefato; não usar substituição forçada global.
-5. Validar o diff e verificar UTF-8/mojibake antes de concluir.
-6. Persistir a seleção de integrações no estado para que um provider removido não reapareça na próxima atualização.
+1. Generate and explain the plan before writing.
+2. Preserve this repository's rules, facts, commands, and customizations.
+3. Add, update, rename, or retire only artifacts whose ownership is proven by state or the compatibility catalog.
+4. Resolve conflicts per artifact; do not force a global replace.
+5. Validate the diff and check UTF-8/mojibake before finishing.
+6. Persist the integration selection in state so a removed provider does not return on the next update.
 
-Não altere código de produção durante esta atualização.
+Do not change production code during this update.

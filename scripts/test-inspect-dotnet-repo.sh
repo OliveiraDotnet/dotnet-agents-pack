@@ -11,6 +11,7 @@ printf '%s\n' "$modern_output" | grep -q 'Suggested profiles: web sqlserver'
 
 legacy_output="$(bash "$INSPECTOR" "$PACK_ROOT/tests/fixtures/legacy-framework")"
 printf '%s\n' "$legacy_output" | grep -q 'v4.8'
-printf '%s\n' "$legacy_output" | grep -q 'Suggested profiles: .*legacy-framework'
+printf '%s\n' "$legacy_output" | grep -q 'Suggested profiles: web'
+printf '%s\n' "$legacy_output" | grep -qv 'legacy-framework'
 
 echo "Repository inspector smoke test passed."

@@ -1,13 +1,13 @@
-# Revisão antes de PR ou release
+# Review before PR or release
 
-Use `$pr-review-dotnet` contra a branch base `[main/develop/outra]`.
+Use `$pr-review-dotnet` against base branch `[main/develop/other]`.
 
-Acione especialistas instalados apenas se o diff justificar. Quero somente achados com evidência, severidade e impacto.
+Request installed specialists only when the diff justifies them. Return evidence-backed findings with severity and impact.
 
-## Saída esperada
+## Expected output
 
-- OK para PR/deploy: sim/não.
-- Bloqueadores.
-- Achados P1/P2.
-- Testes faltantes.
-- Roteiro de homologação.
+- Ready for PR/deploy: yes/no.
+- Blockers.
+- P1/P2 findings.
+- Missing tests.
+- Manual validation checklist.

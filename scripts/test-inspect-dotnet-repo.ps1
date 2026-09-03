@@ -22,6 +22,8 @@ $legacyPath = Join-Path $PackRoot "tests\fixtures\legacy-framework"
 $legacy = & $Inspector -RepoPath $legacyPath -Format json | ConvertFrom-Json
 Assert-True ($legacy.targetFrameworks -contains "v4.8") "Legacy target framework was not detected."
 Assert-True (@($legacy.projectFiles | Where-Object { $_.style -eq "classic" }).Count -eq 1) "Classic project style was not detected."
-Assert-True ($legacy.optionalProfilesSuggested -contains "legacy-framework") "Legacy framework profile was not suggested."
+Assert-True ($legacy.applicationTypes -contains "classic-framework") "Classic application type was not detected."
+Assert-True ($legacy.optionalProfilesSuggested -contains "web") "Legacy web profile was not suggested."
+Assert-True ($legacy.optionalProfilesSuggested -notcontains "legacy-framework") "Inspector suggested a profile that the pack cannot install."
 
 Write-Host "Repository inspector smoke test passed."

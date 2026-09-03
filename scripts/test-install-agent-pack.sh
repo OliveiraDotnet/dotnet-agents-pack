@@ -28,6 +28,12 @@ bash "$INSTALLER" "$REPO" --include-grok-build --dry-run
 bash "$INSTALLER" "$REPO"
 [ -f "$REPO/AGENTS.md" ]
 [ -f "$REPO/.agents/skills/bootstrap-dotnet-repo/SKILL.md" ]
+[ -f "$REPO/.agents/skills/agents-md-generator/references/agents-md-checklist.md" ]
+[ -f "$REPO/.agents/skills/dotnet-xunit-tests/references/xunit-test-checklist.md" ]
+[ ! -e "$REPO/.agents/skills/flutter-tests/SKILL.md" ]
+[ -f "$REPO/.agent-pack/state.txt" ]
+grep -q '^version|1.6.0$' "$REPO/.agent-pack/state.txt"
+grep -q '^profile|core$' "$REPO/.agent-pack/state.txt"
 [ -f "$REPO/.agents/skills/update-agent-pack/SKILL.md" ]
 [ -f "$REPO/.agents/skills/check-text-encoding/scripts/check-mojibake.ps1" ]
 [ -f "$REPO/.agents/skills/check-text-encoding/scripts/check-mojibake.sh" ]
@@ -42,7 +48,11 @@ bash "$INSTALLER" "$REPO"
 
 bash "$INSTALLER" "$REPO" --profile web,sqlserver,quality
 [ -f "$REPO/.codex/agents/frontend-web.toml" ]
+[ -f "$REPO/.agents/skills/web-dotnet/SKILL.md" ]
 [ -f "$REPO/.agents/skills/db-change-sqlserver/SKILL.md" ]
+[ -f "$REPO/.agents/skills/db-change-sqlserver/references/sqlserver-change-gates.md" ]
+[ -f "$REPO/.agents/skills/sqlserver-structure-review/scripts/sqlserver-metadata-map.sql" ]
+[ ! -e "$REPO/.agents/skills/flutter-tests/SKILL.md" ]
 [ -f "$REPO/.agents/skills/security-review-dotnet/SKILL.md" ]
 [ ! -e "$REPO/CLAUDE.md" ]
 [ ! -e "$REPO/.grok" ]
@@ -55,9 +65,9 @@ bash "$INSTALLER" "$REPO" --include-claude
 [ -f "$REPO/.claude/skills/update-agent-pack/SKILL.md" ]
 [ -f "$REPO/.claude/skills/check-text-encoding/scripts/check-mojibake.ps1" ]
 [ -f "$REPO/.claude/skills/check-text-encoding/scripts/check-mojibake.sh" ]
-[ ! -e "$REPO/.claude/agents/frontend-web.md" ]
-[ ! -e "$REPO/.claude/agents/database-sqlserver.md" ]
-[ ! -e "$REPO/.claude/agents/security-reviewer.md" ]
+[ -f "$REPO/.claude/agents/frontend-web.md" ]
+[ -f "$REPO/.claude/agents/database-sqlserver.md" ]
+[ -f "$REPO/.claude/agents/security-reviewer.md" ]
 cmp -s "$REPO/.agents/skills/bootstrap-dotnet-repo/SKILL.md" "$REPO/.claude/skills/bootstrap-dotnet-repo/SKILL.md"
 
 bash "$INSTALLER" "$REPO" --include-grok-build
@@ -67,9 +77,9 @@ bash "$INSTALLER" "$REPO" --include-grok-build
 [ -f "$REPO/.agents/skills/delegate-to-grok-build/SKILL.md" ]
 [ -f "$REPO/.grok/skills/execute-codex-work-order/SKILL.md" ]
 [ -f "$REPO/prompts/09-migrate-claude-to-codex-grok.md" ]
-[ ! -e "$REPO/.grok/agents/frontend-web.md" ]
-[ ! -e "$REPO/.grok/agents/database-sqlserver.md" ]
-[ ! -e "$REPO/.grok/agents/security-reviewer.md" ]
+[ -f "$REPO/.grok/agents/frontend-web.md" ]
+[ -f "$REPO/.grok/agents/database-sqlserver.md" ]
+[ -f "$REPO/.grok/agents/security-reviewer.md" ]
 cmp -s "$REPO/.agents/skills/bootstrap-dotnet-repo/SKILL.md" "$REPO/.grok/skills/bootstrap-dotnet-repo/SKILL.md"
 
 bash "$INSTALLER" "$REPO" --include-grok-build
@@ -83,6 +93,9 @@ bash "$INSTALLER" "$REPO" --profile web,sqlserver,quality --include-claude
 [ -f "$REPO/.claude/agents/database-sqlserver.md" ]
 [ -f "$REPO/.claude/agents/security-reviewer.md" ]
 [ -f "$REPO/.claude/skills/db-change-sqlserver/SKILL.md" ]
+[ -f "$REPO/.claude/skills/sqlserver-structure-review/references/sqlserver-review-checklist.md" ]
+[ -f "$REPO/.claude/skills/web-dotnet/SKILL.md" ]
+[ ! -e "$REPO/.claude/skills/flutter-tests/SKILL.md" ]
 [ -f "$REPO/.claude/skills/security-review-dotnet/SKILL.md" ]
 
 bash "$INSTALLER" "$REPO" --profile web,sqlserver,quality --include-grok-build
@@ -90,6 +103,9 @@ bash "$INSTALLER" "$REPO" --profile web,sqlserver,quality --include-grok-build
 [ -f "$REPO/.grok/agents/database-sqlserver.md" ]
 [ -f "$REPO/.grok/agents/security-reviewer.md" ]
 [ -f "$REPO/.grok/skills/db-change-sqlserver/SKILL.md" ]
+[ -f "$REPO/.grok/skills/sqlserver-structure-review/scripts/find-sqlserver-references.ps1" ]
+[ -f "$REPO/.grok/skills/web-dotnet/SKILL.md" ]
+[ ! -e "$REPO/.grok/skills/flutter-tests/SKILL.md" ]
 [ -f "$REPO/.grok/skills/security-review-dotnet/SKILL.md" ]
 [ -f "$REPO/CLAUDE.md" ]
 

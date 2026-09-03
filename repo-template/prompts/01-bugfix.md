@@ -1,30 +1,30 @@
-# Correção de bug
+# Bugfix
 
-Use `$bugfix-dotnet` para o bug abaixo.
+Use `$bugfix-dotnet` for the bug below.
 
 ## Bug
 
-[descrever bug]
+[describe the bug]
 
-## Comportamento atual
+## Current behavior
 
-[descrever comportamento atual]
+[describe current behavior]
 
-## Comportamento esperado
+## Expected behavior
 
-[descrever comportamento esperado]
+[describe expected behavior]
 
-## Evidências
+## Evidence
 
-- Prints/logs/stack trace:
-- Usuário/perfil afetado:
-- Ambiente:
-- Data aproximada:
+- Logs or stack trace:
+- Affected user or profile:
+- Environment:
+- Approximate date:
 - Branch:
 
-## Saída esperada
+## Expected output
 
-- Causa raiz com evidência.
-- Arquivos alterados.
-- Validação confirmada ou bloqueador.
-- Cenário manual e riscos restantes.
+- Root cause with evidence.
+- Changed files.
+- Confirmed validation or the exact blocker.
+- Manual scenario and remaining risks.

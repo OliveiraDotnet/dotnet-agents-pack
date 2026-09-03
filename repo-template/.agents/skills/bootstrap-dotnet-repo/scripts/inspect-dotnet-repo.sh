@@ -6,7 +6,7 @@ repo_path="$(cd "$repo_path" && pwd -P)"
 
 find_files() {
   find "$repo_path" \
-    \( -path '*/.git/*' -o -path '*/bin/*' -o -path '*/obj/*' -o -path '*/node_modules/*' -o -path '*/packages/*' -o -path '*/.vs/*' \) -prune -o \
+    \( -path '*/.git/*' -o -path '*/bin/*' -o -path '*/obj/*' -o -path '*/node_modules/*' -o -path '*/packages/*' -o -path '*/.vs/*' -o -path '*/.agents/*' -o -path '*/.claude/*' -o -path '*/.grok/*' -o -path '*/.codex/*' -o -path '*/.agent-pack/*' \) -prune -o \
     -type f -print
 }
 
@@ -32,7 +32,6 @@ tfms="$(find_files | grep -E '\.(csproj|fsproj|vbproj)$' | while IFS= read -r pr
 
 profiles=()
 if [ "$(count_pattern '\.(cshtml|razor|aspx)$|(^|/)Web\.config$|(^|/)wwwroot/')" -gt 0 ]; then profiles+=(web); fi
-if [ "$(count_pattern '(^|/)packages\.config$|(^|/)Web\.config$|\.aspx$')" -gt 0 ]; then profiles+=(legacy-framework); fi
 sql_package_project="$(find_files | grep -E '\.(csproj|fsproj|vbproj)$' | while IFS= read -r project; do grep -l -E '(SqlClient|EntityFramework|Dapper)' "$project" 2>/dev/null || true; done | head -n 1 || true)"
 if [ "$(count_pattern '\.sql$')" -gt 0 ] || [ -n "$sql_package_project" ]; then
   profiles+=(sqlserver)

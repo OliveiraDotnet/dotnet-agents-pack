@@ -1,0 +1,4 @@
+interface:
+  display_name: "AGENTS.md Generator"
+  short_description: "Generate repository AGENTS.md guidance"
+  default_prompt: "Use $agents-md-generator to create or improve AGENTS.md for this repository."

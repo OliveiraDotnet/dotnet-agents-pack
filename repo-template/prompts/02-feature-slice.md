@@ -1,23 +1,23 @@
-# Nova implementação
+# Feature slice
 
-Use `$feature-slice-dotnet` para a feature abaixo.
+Use `$feature-slice-dotnet` for the feature below.
 
 ## Feature
 
-[descrever feature]
+[describe the feature]
 
-## Objetivo de negócio
+## Business goal
 
-[por que isso é necessário]
+[why this is needed]
 
-## Critérios de aceite
+## Acceptance criteria
 
 1. [...]
 2. [...]
 3. [...]
 
-## Saída esperada
+## Expected output
 
-- Escopo e plano, quando necessário.
-- Implementação e arquivos alterados.
-- Validação, roteiro manual e riscos.
+- Scope and plan when the change is not trivial.
+- Implementation and changed files.
+- Validation, manual scenario, and remaining risks.

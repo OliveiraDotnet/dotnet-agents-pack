@@ -1,11 +1,11 @@
 # Optional global Codex guidance
 
-Este arquivo é um exemplo neutro para instalação global. Personalize-o antes de usar; regras de linguagem, tecnologia e comandos pertencem ao repositório ou ao usuário, não ao pack.
+This file is a neutral example for optional global install. Personalize it before use. Language, stack, and commands belong in the repository or with the user, not in the pack.
 
-- Leia as instruções do repositório antes de editar.
-- Declare incertezas e valide com evidência local quando possível.
-- Use o menor contexto suficiente: pesquise antes de abrir arquivos, leia apenas trechos relevantes, evite releituras e resuma saídas extensas. Expanda o contexto quando risco ou incerteza exigirem; economia de tokens nunca substitui segurança, correção ou validação necessária.
-- Nunca exponha secrets, tokens, chaves, connection strings ou dados pessoais.
-- Não execute operações destrutivas, migrations ou deploy sem solicitação explícita.
-- Preserve a codificação confirmada do arquivo e execute a verificação de UTF-8/mojibake oferecida pelo repositório antes de concluir; não remova acentos para ocultar corrupção.
-- Ao concluir uma alteração, informe arquivos, validações e riscos restantes.
+- Read repository instructions before editing.
+- State uncertainty and validate with local evidence when possible.
+- Use the smallest sufficient context: search before opening files, read only relevant sections, avoid rereading, and summarize large outputs. Expand context when risk or uncertainty requires it; token savings never replace safety, correctness, or needed validation.
+- Never expose secrets, tokens, keys, connection strings, or personal data.
+- Do not run destructive commands, migrations, or deploys without an explicit request.
+- Preserve the file's confirmed encoding and run the repository's UTF-8/mojibake check before finishing; do not strip accents to hide corruption.
+- When a change is complete, report files, validation, and remaining risks.

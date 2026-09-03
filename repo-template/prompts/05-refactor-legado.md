@@ -1,19 +1,19 @@
-# Refatoração segura de legado
+# Safe legacy refactor
 
-Use `$legacy-refactor-dotnet` para o alvo abaixo.
+Use `$legacy-refactor-dotnet` for the target below.
 
-## Alvo
+## Target
 
-[arquivo/classe/método/fluxo]
+[file/class/method/flow]
 
-## Objetivo
+## Goal
 
-[melhorar legibilidade/testabilidade/performance/reduzir duplicação/outro]
+[readability, testability, performance, duplication, or other]
 
-## Saída esperada
+## Expected output
 
-- Plano.
-- Riscos.
-- Alterações aplicadas.
-- Testes/comandos executados.
-- Comparação antes/depois.
+- Plan.
+- Risks.
+- Applied changes.
+- Tests or commands run.
+- Before/after behavior comparison.

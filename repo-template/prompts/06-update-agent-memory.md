@@ -1,11 +1,11 @@
-# Atualizar memória técnica
+# Update technical memory
 
-Use `$maintain-agent-memory` para a lição abaixo.
+Use `$maintain-agent-memory` for the lesson below.
 
-## Lição aprendida
+## Lesson
 
-[descrever regra, bug recorrente, convenção ou armadilha]
+[durable rule, recurring bug, convention, or trap]
 
-## Saída esperada
+## Expected output
 
-- Arquivo atualizado, evidência e motivo da escolha.
+- File updated, evidence, and why it belongs there.

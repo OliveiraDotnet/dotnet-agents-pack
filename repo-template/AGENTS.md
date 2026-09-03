@@ -16,6 +16,9 @@ Use `docs/ai/project-map.md` for the latest confirmed map. Prefer evidence in pr
 ## Working rules
 
 - Inspect the repository shape and the affected execution path before changing code.
+- Classify a change as trivial only when it stays in one area and does not change public contracts, data, authorization, production dependencies, or unconfirmed commands. Otherwise present a plan and wait for Gate 1 approval.
+- Use `sqlserver-structure-review` for read-only database understanding and `db-change-sqlserver` only after an approved schema or data plan.
+- Use `web-dotnet` / `frontend_web` for UI that lives in the .NET web project (Razor, MVC, Blazor, Web Forms, app JavaScript).
 - Do not invent build, test, run or deployment commands. Record only commands confirmed by repository evidence.
 - Preserve observed conventions and public behavior. Keep bugfixes and refactors separate.
 - Keep changes limited to the requested scope; explain impacts to contracts, data, configuration and users.
@@ -28,7 +31,7 @@ Use `docs/ai/project-map.md` for the latest confirmed map. Prefer evidence in pr
 ## Context and delegation
 
 - Use the smallest sufficient context: search before opening files, read only relevant sections, avoid rereading unchanged content and summarize large outputs instead of copying them into the conversation. Expand context when uncertainty or risk justifies it; never trade correctness, security or necessary validation for token savings.
-- Read `docs/ai` only when it is relevant to the task. Treat documents without source and verification date as hypotheses.
+- Read `docs/ai` only when it is relevant to the task. Treat documents without source and verification date, or whose solution/CI fingerprint changed, as hypotheses and revalidate with `maintain-agent-memory`.
 - Use `repo_explorer` for bounded read-only mapping. Add at most the specialist justified by the detected stack or diff.
 - Core agents: `repo_explorer`, `dotnet_implementer`, `test_guardian` and `change_reviewer`.
 - Optional profiles add `frontend_web`, `database_sqlserver` or the quality reviewers. Do not request every reviewer by default.

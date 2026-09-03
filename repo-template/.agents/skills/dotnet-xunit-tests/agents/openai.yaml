@@ -1,0 +1,4 @@
+interface:
+  display_name: ".NET xUnit Tests"
+  short_description: "Create robust xUnit tests for .NET"
+  default_prompt: "Use $dotnet-xunit-tests to create regression tests for this bug."

@@ -1,28 +1,28 @@
-# Investigar sem alterar
+# Investigate without changing files
 
-Investigue o problema abaixo sem alterar arquivos. Use `repo_explorer` apenas se o fluxo precisar de mapeamento independente.
+Investigate the problem below without editing files. Use `repo_explorer` only if the flow needs independent mapping.
 
-## Problema
+## Problem
 
-[descrever]
+[describe]
 
-## Objetivo da investigação
+## Investigation goal
 
-- Encontrar causa provável.
-- Mapear arquivos envolvidos.
-- Sugerir solução segura.
-- Apontar riscos.
+- Find the likely cause.
+- Map involved files.
+- Suggest a safe fix.
+- Call out risks.
 
-## Restrições
+## Constraints
 
-- Não edite arquivos.
-- Não rode comando destrutivo.
-- Não corrija ainda.
+- Do not edit files.
+- Do not run destructive commands.
+- Do not implement the fix yet.
 
-## Saída esperada
+## Expected output
 
-- Diagnóstico.
-- Evidências no código.
-- Hipótese de causa raiz.
-- Plano de correção.
-- Riscos.
+- Diagnosis.
+- Code evidence.
+- Root-cause hypothesis.
+- Fix plan.
+- Risks.

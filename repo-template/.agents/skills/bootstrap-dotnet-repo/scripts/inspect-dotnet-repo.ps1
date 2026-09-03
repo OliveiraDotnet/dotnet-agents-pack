@@ -63,7 +63,7 @@ if (Get-Command git -ErrorAction SilentlyContinue) {
     if ($LASTEXITCODE -eq 0 -and $candidate) { $gitRoot = (Resolve-Path -LiteralPath $candidate.Trim()).Path }
 }
 
-$excluded = @(".git", "bin", "obj", "node_modules", "packages", ".vs")
+$excluded = @(".git", "bin", "obj", "node_modules", "packages", ".vs", ".agents", ".claude", ".grok", ".codex", ".agent-pack")
 $files = Get-ChildItem -LiteralPath $repo -File -Recurse -Force | Where-Object {
     $relative = Get-RelativePath $repo $_.FullName
     -not ($excluded | Where-Object { $relative -match "(^|/)$([regex]::Escape($_))(/|$)" })
@@ -98,10 +98,12 @@ if (& $contains '(?i)(\.cshtml$|\.razor$|\.aspx$|web\.config$|wwwroot/)') { $app
 if (& $contains '(?i)(\.xaml$|\.resx$)') { $applicationTypes += "desktop-or-xaml" }
 if (& $contains '(?i)(\.svc$|\.asmx$)') { $applicationTypes += "legacy-service" }
 if (& $contains '(?i)(worker|service)') { $applicationTypes += "worker-or-service" }
+if ((& $contains '(?i)(^|/)packages\.config$|\.aspx$') -or @($projects | Where-Object { $_.style -eq "classic" }).Count -gt 0) { $applicationTypes += "classic-framework" }
+if ((& $contains '(?i)(^|/)angular\.json$') -or (& $contains '(?i)(^|/)package\.json$') -and (& $contains '(?i)(^|/)(src[/\\].*\.(tsx|jsx)$)')) { $applicationTypes += "spa" }
+if (& $contains '(?i)(^|/)pubspec\.ya?ml$') { $applicationTypes += "flutter" }
 
 $profiles = @()
 if ($applicationTypes -contains "web") { $profiles += "web" }
-if ((& $contains '(?i)(^|/)packages\.config$|web\.config$|\.aspx$') -or @($projects | Where-Object { $_.style -eq "classic" }).Count -gt 0) { $profiles += "legacy-framework" }
 if ((& $contains '(?i)\.sql$') -or @($allPackages | Where-Object { $_ -match '(?i)(sqlclient|entityframework|dapper)' }).Count -gt 0) { $profiles += "sqlserver" }
 
 $ciFiles = @($relativeFiles | Where-Object { $_ -match '(^\.github/workflows/|(^|/)azure-pipelines.*\.ya?ml$|(^|/)\.gitlab-ci\.ya?ml$|(^|/)(build|test)\.(ps1|sh|cmd|bat)$)' })

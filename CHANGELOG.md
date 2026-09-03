@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.6.0
+
+- Freezes 1.5.0 fingerprints in `compat/releases/1.5.0.txt` so existing installs can update without a guessed baseline.
+- Inspects the workspace before install: one Git root, a parent folder of independent repositories, or an explicit non-Git folder.
+- Auto-selects `web` and `sqlserver` from repository evidence when `-Profile` / `--profile` is omitted; `quality` stays opt-in.
+- Writes `.agent-pack/state.txt` on new installs.
+- Removes the Flutter profile. Unchanged 1.5.0 Flutter artifacts that match the catalog are retired on update; customized files require an explicit resolution.
+- Adds `web-dotnet` for Razor, MVC, Blazor, Web Forms, and .NET 3.1+ / Framework UI.
+- Tightens `sqlserver-structure-review` as read-only system understanding and `db-change-sqlserver` so destructive SQL waits for an approved plan.
+- Aligns `agents-md-generator` with the short pack `AGENTS.md` template and stops the inspector from suggesting a non-existent `legacy-framework` profile.
+- Ships installed prompts, agents, and pack documentation in English.
+
+## 1.5.0
+
+- Incorpora `agents-md-generator` e `dotnet-xunit-tests` ao núcleo compartilhado.
+- Adiciona `sqlserver-structure-review` ao perfil `sqlserver`, com checklists, scripts de inventário e preflight de acesso, além de consulta de metadados somente leitura.
+- Adiciona o perfil opt-in `flutter` com a skill `flutter-tests`, sem instalá-la em repositórios .NET por padrão.
+- Espelha as novas skills e seus recursos para Claude Code e Grok Build quando as integrações correspondentes são selecionadas.
+- Atualiza instaladores, manifestos, metadados e smoke tests para reconhecer o perfil `flutter`.
+
 ## 1.4.0
 
 - Define o usuário como única autoridade decisória na colaboração Codex + Grok Build.

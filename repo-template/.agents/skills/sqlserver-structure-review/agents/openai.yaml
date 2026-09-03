@@ -1,0 +1,4 @@
+interface:
+  display_name: "SQL Server Structure Review"
+  short_description: "Review SQL Server schema and .NET data access"
+  default_prompt: "Use $sqlserver-structure-review to analyze this project's SQL Server database structure and create a context map."

@@ -1203,8 +1203,13 @@ if [ "$state_exists" = false ]; then
         add_receipt "$artifact_id" "$destination_relative" "seed" "-" "-" "keep-local" "$current_hash"
         ;;
       *)
-        add_action "$artifact_id" "CONFLICT_LEGACY_REMOVED" "$destination_relative" "" "managed" "$current_hash"
-        conflict_count=$((conflict_count + 1))
+        find_known_hash_version "$artifact_id" "$destination_relative" "$current_hash"
+        if [ -n "$KNOWN_VERSION" ]; then
+          add_action "$artifact_id" "REMOVE_ACCEPTED" "$destination_relative" "" "managed" "$current_hash"
+        else
+          add_action "$artifact_id" "CONFLICT_LEGACY_REMOVED" "$destination_relative" "" "managed" "$current_hash"
+          conflict_count=$((conflict_count + 1))
+        fi
         ;;
     esac
   done

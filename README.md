@@ -1,102 +1,75 @@
 # .NET Agents Pack
 
-Pack genérico para orientar agentes de código em repositórios .NET modernos e legados sem impor arquitetura, comandos ou preferências pessoais. O Codex permanece a integração padrão e o plano de controle; Claude Code e Grok Build são integrações opt-in independentes.
+Generic pack that steers coding agents in modern and legacy .NET repositories without inventing architecture, commands, or personal preferences. Codex is the default integration and control plane. Claude Code and Grok Build are independent opt-in integrations.
 
-Ele fornece um núcleo pequeno para bootstrap, bugfix, feature, refatoração e revisão; perfis opcionais acrescentam especialização para web, SQL Server e revisão de qualidade.
+It installs a small core for bootstrap, bugfix, feature work, refactoring, review, `AGENTS.md` generation, and xUnit tests. Optional profiles add web UI, SQL Server, and evidence-based quality review.
 
-## Componentes
+Version 1.6.0 inspects the workspace before it copies files: a Git root, a parent folder of independent repositories, or a non-Git folder. It suggests `web` and `sqlserver` from repository evidence. It does not install Flutter; a later mobile pack can cover that.
 
-| Componente | Instalação | Uso |
+## Components
+
+| Component | Install | Use |
 |---|---|---|
-| `core` | sempre | Contexto do repositório, descoberta .NET, agentes de exploração/implementação/teste/revisão e skills principais. |
-| `web` | opcional | Razor, MVC, Blazor e JavaScript. |
-| `sqlserver` | opcional | SQL Server, EF, Dapper, scripts e migrations. |
-| `quality` | opcional | Revisão de segurança, performance e release baseada em evidência. |
+| `core` | always | Repository context, .NET discovery, explore/implement/test/review agents, and core skills. |
+| `web` | optional / auto when UI evidence exists | Razor, MVC, Blazor, Web Forms, and app JavaScript, including .NET 3.1+ and classic Framework. |
+| `sqlserver` | optional / auto when SQL evidence exists | Read-only system understanding from SQL Server, then planned changes only after approval. |
+| `quality` | optional, never auto | Evidence-based security, performance, and release review. |
 
-O manifesto em `pack-manifest.txt` é a fonte de verdade dos arquivos instalados. Cada entrada informa componente e origem, com um destino opcional para casos em que o mesmo conteúdo precisa ser exposto em outro caminho. Quando o destino é omitido, ele é igual à origem. O instalador nunca copia um perfil que não foi solicitado.
+`pack-manifest.txt` is the source of truth for installed files. `pack-artifacts.txt` records stable ids and ownership. `pack-version.txt` is the pack version. `compat/releases/` stores trusted fingerprints so 1.5.0 (and earlier) installs can update without losing project-owned files.
 
-`pack-artifacts.txt` complementa o manifesto com um identificador estável e a política de propriedade de cada destino. `pack-version.txt` registra a versão do pack e `compat/releases/` mantém fingerprints confiáveis para a primeira atualização de instalações anteriores.
+The installer never copies a profile that was not selected or detected. An upgrade never installs a profile that the destination did not already have.
 
-## Instalação
+## Install
 
-Execute na raiz do pack, apontando para a raiz Git do repositório de destino.
+Run from the pack root. Point at a Git root **or** a workspace folder that contains Git repositories.
 
 ```powershell
-# Windows PowerShell ou PowerShell 7
-.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Profile web,sqlserver
+# Inspect a workspace with more than one repository, then install into each Git root
+.\scripts\install-agent-pack.ps1 -RepoPath "C:\src" -DiscoverOnly
+.\scripts\install-agent-pack.ps1 -RepoPath "C:\src"
 
-# Visualizar as ações sem escrever arquivos
-.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Profile quality -DryRun
+# Explicit profiles (skips auto-detection)
+.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MySystem" -Profile web,sqlserver
 
-# Codex e Claude Code no mesmo projeto
-.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Profile web,quality -IncludeClaude
+# Preview without writing
+.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MySystem" -Profile quality -DryRun
 
-# Usuário aprova; Codex planeja e revisa; Grok Build executa em worktrees nativos
-.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Profile web,quality -IncludeGrokBuild
+# Codex + Grok Build
+.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MySystem" -IncludeGrokBuild
 ```
 
 ```bash
-# Linux, macOS ou Git Bash
-bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile web,sqlserver
-
-# Visualizar as ações sem escrever arquivos
-bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile quality --dry-run
-
-# Codex e Claude Code no mesmo projeto
-bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile web,quality --include-claude
-
-# Usuário aprova; Codex planeja e revisa; Grok Build executa em worktrees nativos
-bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile web,quality --include-grok-build
+bash ./scripts/install-agent-pack.sh /src --discover-only
+bash ./scripts/install-agent-pack.sh /src
+bash ./scripts/install-agent-pack.sh /src/my-system --profile web,sqlserver
+bash ./scripts/install-agent-pack.sh /src/my-system --profile quality --dry-run
+bash ./scripts/install-agent-pack.sh /src/my-system --include-grok-build
 ```
 
-Sem flags de integração, a instalação mantém o comportamento atual e instala somente o Codex. `IncludeClaude` acrescenta o bridge `CLAUDE.md`, agentes em `.claude/agents` e skills em `.claude/skills`. `IncludeGrokBuild` acrescenta a política mínima `.grok/config.toml`, agentes e skills nativos em `.grok`, a skill Codex `delegate-to-grok-build` e o prompt de migração. As duas flags podem coexistir.
+Without integration flags, only Codex is installed. `IncludeClaude` / `--include-claude` adds the Claude bridge. `IncludeGrokBuild` / `--include-grok-build` adds Grok project files. New installs write `.agent-pack/state.txt` so later updates do not depend only on fingerprints.
 
-Na colaboração Codex+Grok, o usuário é a única autoridade decisória. O Codex investiga, projeta, propõe o plano, delega dentro do escopo aprovado e revisa o diff; o Grok Build executa tarefas delimitadas com paralelismo e isolamento por worktree. Trabalho não trivial exige aprovação explícita do plano antes da execução e validação manual antes de qualquer autorização para commit, push, merge, deploy, release, migration de produção ou alteração de dados.
+Use `-AllowNonGit` / `--allow-non-git` only for a folder that is intentionally not Git. `-InstallGlobal` / `--install-global` copies the optional personal Codex example; it is not installed by default.
 
-Use `-InstallGlobal` ou `--install-global` somente se quiser copiar o exemplo neutro de preferências pessoais do Codex. Ele respeita `CODEX_HOME` quando definido, não instala configuração global automaticamente e não instala orientação global do Claude Code.
+## Safe update of an existing 1.5.0 install
 
-Sem Git, use `-AllowNonGit` ou `--allow-non-git` conscientemente.
-
-## Atualização segura de repositórios já instalados
-
-Use o atualizador, não o `Force` do instalador, para evoluir um repositório que já recebeu o pack. A primeira execução reconhece arquivos idênticos de versões conhecidas; as seguintes usam `.agent-pack/state.txt` para distinguir conteúdo gerenciado pelo pack de conteúdo pertencente ao projeto.
+Use the updater, not the installer's `Force` switch.
 
 ```powershell
-# Plano somente leitura
-.\scripts\update-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Check
-
-# Aplicar somente quando o plano não tiver conflitos
-.\scripts\update-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Apply
+.\scripts\update-agent-pack.ps1 -RepoPath "C:\src\MySystem" -Check
+.\scripts\update-agent-pack.ps1 -RepoPath "C:\src\MySystem" -Apply
 ```
 
 ```bash
-bash ./scripts/update-agent-pack.sh /src/meu-sistema --check
-bash ./scripts/update-agent-pack.sh /src/meu-sistema --apply
+bash ./scripts/update-agent-pack.sh /src/my-system --check
+bash ./scripts/update-agent-pack.sh /src/my-system --apply
 ```
 
-Para migrar uma instalação existente e tornar a escolha durável, use `-Integration codex,grok` no PowerShell ou `--integration codex,grok` no shell, primeiro com check e depois com apply. O prompt `prompts/09-migrate-claude-to-codex-grok.md` conduz a preservação de regras úteis, a remoção segura dos artefatos Claude e a validação final.
+Unchanged Flutter files from 1.5.0 are retired automatically when they still match the 1.5.0 catalog. Customized Flutter files require `AcceptPack` or `KeepLocal`. `docs/ai` stays repository-owned. `AGENTS.md` uses merge ownership.
 
-Skills, agentes e prompts são atualizados apenas quando a origem do arquivo é comprovada. A seleção de perfis e integrações já instalada é preservada; a mera existência de um perfil novo no pack não autoriza sua instalação. `AGENTS.md`, `CLAUDE.md` e `.grok/config.toml` exigem resolução explícita se tiverem sido adaptados pelo projeto. Arquivos em `docs/ai` são seeds: depois de criados, permanecem sob propriedade do repositório. Um conflito bloqueia toda a aplicação, e as decisões são fornecidas por artefato com `AcceptMerge`, `AcceptPack` ou `KeepLocal`.
+## First use
 
-No Codex, use `$update-agent-pack`; no Claude Code, `/update-agent-pack`. O prompt `prompts/08-update-agent-pack.md` orienta o mesmo fluxo.
+Open the installed repository and run `prompts/00-bootstrap-repo.md` or `$bootstrap-dotnet-repo`. The skill inspects without changing production code, then fills confirmed facts. Start a new task afterward so persistent instructions reload.
 
-## Primeiro uso
+For SQL Server, `$sqlserver-structure-review` is read-only. `$db-change-sqlserver` writes scripts only after you approve the plan. For .NET UI, use `$web-dotnet`.
 
-Abra o repositório no agente escolhido e execute o prompt `prompts/00-bootstrap-repo.md`. No Codex, invoque `$bootstrap-dotnet-repo`; no Claude Code, quando o suplemento estiver instalado, invoque `/bootstrap-dotnet-repo`. A skill executa uma inspeção somente leitura e registra fatos confirmados antes de preencher a memória técnica.
-
-Codex e Grok Build carregam `AGENTS.md` diretamente. O bridge `CLAUDE.md` importa esse mesmo arquivo para o Claude Code. Depois do bootstrap, inicie uma nova tarefa ou sessão para recarregar instruções persistentes atualizadas.
-
-## Garantias operacionais
-
-- Não presume `dotnet build`, SQL Server, web ou arquitetura em camadas.
-- Não executa restore, build, testes, migrations ou deploy durante a descoberta.
-- O instalador não sobrescreve arquivo existente sem `Force`; o atualizador só substitui um artefato com baseline comprovado ou decisão explícita para aquele ID.
-- Não instala arquivos do Claude Code sem `IncludeClaude` ou `--include-claude`.
-- Não instala arquivos do Grok Build sem `IncludeGrokBuild` ou `--include-grok-build`.
-- Mantém worktrees, sessões e estado operacional do Grok fora do repositório; somente regras, agentes, skills e configuração de projeto necessários são versionados.
-- Não instala permissões de sandbox ou approval policy no repositório.
-- Mantém instruções persistentes curtas; detalhes ficam em skills e `docs/ai`.
-- Orienta o agente a começar pelo menor contexto suficiente, evitando releituras, saídas extensas e delegação redundante sem sacrificar correção ou validação.
-- Verifica arquivos de texto alterados quanto a UTF-8 inválido e assinaturas prováveis de mojibake, sem reescrever ou remover acentos automaticamente.
-
-Para adoção prática, consulte primeiro o [manual completo de uso](MANUAL_DE_USO.md). Consulte também [as instruções detalhadas](INSTRUCOES_DETALHADAS.md), o [changelog](CHANGELOG.md), as [fontes oficiais do Codex](FONTES_OFICIAIS_CODEX.md), as [fontes oficiais do Claude Code](FONTES_OFICIAIS_CLAUDE.md) e as [fontes oficiais do Grok Build](FONTES_OFICIAIS_GROK_BUILD.md) antes de adotar o pack em escala.
+See the [usage manual](MANUAL_DE_USO.md), [detailed instructions](INSTRUCOES_DETALHADAS.md), [changelog](CHANGELOG.md), and the official Codex, Claude, and Grok Build source notes before rolling the pack out widely.

@@ -1,3 +1,7 @@
+# .NET Agents Pack adoption guide
+
+English operating docs for 1.6.0 are in `README.md` and `MANUAL_DE_USO.md`. This file keeps the deeper adoption notes; prefer those two documents for install, upgrade, and daily use.
+
 # Guia de adoção do .NET Agents Pack
 
 ## Objetivo
@@ -50,7 +54,8 @@ Por padrão, o instalador exige que `RepoPath` seja exatamente a raiz Git. Isso 
 .\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MeuSistema"
 
 # Núcleo e perfis detectados ou conhecidos
-.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Profile web,sqlserver,quality
+.\scripts\install-agent-pack.ps1 -RepoPath "C:\src" -DiscoverOnly
+.\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MySystem" -Profile web,sqlserver,quality
 
 # Inspecionar sem escrever
 .\scripts\install-agent-pack.ps1 -RepoPath "C:\src\MeuSistema" -Profile web -DryRun
@@ -64,7 +69,8 @@ Por padrão, o instalador exige que `RepoPath` seja exatamente a raiz Git. Isso 
 
 ```bash
 bash ./scripts/install-agent-pack.sh /src/meu-sistema
-bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile web,sqlserver,quality
+bash ./scripts/install-agent-pack.sh /src --discover-only
+bash ./scripts/install-agent-pack.sh /src/my-system --profile web,sqlserver,quality
 bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile web --dry-run
 bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile web,quality --include-claude
 bash ./scripts/install-agent-pack.sh /src/meu-sistema --profile web,quality --include-grok-build
@@ -75,7 +81,8 @@ Componentes disponíveis:
 - `core`: sempre instalado; contém o bootstrap e os agentes principais.
 - `web`: Razor, MVC, Blazor e JavaScript.
 - `sqlserver`: SQL Server e workflow de alteração de dados.
-- `quality`: revisão de segurança, performance e release.
+- `quality`: security, performance, and release review. Never auto-selected.
+- Flutter was removed in 1.6.0. Unchanged 1.5.0 Flutter artifacts matching the compatibility catalog are retired on update.
 
 `IncludeClaude`/`--include-claude` e `IncludeGrokBuild`/`--include-grok-build` não são perfis funcionais. Cada opção acrescenta o adaptador correspondente somente para o núcleo e os perfis já selecionados. Sem a flag, nenhum arquivo específico daquela ferramenta é instalado. As duas opções podem ser usadas juntas.
 
@@ -167,6 +174,10 @@ O bootstrap pode atualizar `AGENTS.md` e `docs/ai`, mas as instruções novas pa
 | Corrigir bug | `prompts/01-bugfix.md` | `$bugfix-dotnet` | `/bugfix-dotnet` |
 | Implementar feature | `prompts/02-feature-slice.md` | `$feature-slice-dotnet` | `/feature-slice-dotnet` |
 | Alterar SQL Server | `prompts/03-db-change.md` | `$db-change-sqlserver` | `/db-change-sqlserver` |
+| Revisar estrutura SQL Server | — | `$sqlserver-structure-review` | `/sqlserver-structure-review` |
+| Testar .NET com xUnit | — | `$dotnet-xunit-tests` | `/dotnet-xunit-tests` |
+| .NET web UI | — | `$web-dotnet` | `/web-dotnet` |
+| Understand SQL Server | — | `$sqlserver-structure-review` | `/sqlserver-structure-review` |
 | Revisar mudança | `prompts/04-pr-review.md` | `$pr-review-dotnet` | `/pr-review-dotnet` |
 | Refatorar legado | `prompts/05-refactor-legado.md` | `$legacy-refactor-dotnet` | `/legacy-refactor-dotnet` |
 | Atualizar memória | `prompts/06-update-agent-memory.md` | `$maintain-agent-memory` | `/maintain-agent-memory` |

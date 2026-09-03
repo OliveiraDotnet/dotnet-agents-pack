@@ -4,57 +4,57 @@
 > Last verified: `[UNVERIFIED]`  
 > Confidence: `[UNVERIFIED]`
 
-## Arquitetura real
+## Observed architecture
 
-Descreva a arquitetura observada no repositório, não uma arquitetura desejada. Diferencie fatos, inferências e dívidas.
+Describe the architecture found in the repository, not a desired architecture. Separate facts, inferences, and debt.
 
-- Tipo:
-- Camadas:
-- Padrão dominante:
-- Padrões mistos:
+- Type:
+- Layers:
+- Dominant pattern:
+- Mixed patterns:
 
-## Dependências observadas
+## Observed dependencies
 
 ```text
-[exemplo]
+[example]
 Web -> Application -> Domain
 Web -> Infrastructure
 Infrastructure -> Database
 ```
 
-## Padrões encontrados
+## Patterns found
 
 - Controllers/PageModels:
-- Serviços:
-- Repositórios:
-- Validações:
+- Services:
+- Repositories:
+- Validation:
 - DTOs/ViewModels:
-- Logs:
-- Tratamento de erros:
+- Logging:
+- Error handling:
 
-## Regras de implementação
+## Implementation rules
 
-- Onde colocar nova regra de negócio:
-- Onde colocar novo endpoint:
-- Onde colocar nova tela/componente:
-- Onde colocar query/repositório:
-- Onde colocar validação:
+- Where a new business rule belongs:
+- Where a new endpoint belongs:
+- Where a new screen/component belongs:
+- Where a new query/repository belongs:
+- Where validation belongs:
 
-## Débitos técnicos relevantes
+## Relevant technical debt
 
-| Débito | Impacto | Risco | Recomendação |
+| Debt | Impact | Risk | Recommendation |
 |---|---|---|---|
-| [descrição] | [impacto] | [baixo/médio/alto] | [ação] |
+| [description] | [impact] | [low/medium/high] | [action] |
 
-## Decisões conhecidas
+## Known decisions
 
-Registre decisões arquiteturais já tomadas, incluindo fonte e data de verificação quando disponível.
+Record architectural decisions already made, including source and verification date when available.
 
 - ...
 
-## Não fazer
+## Do not
 
-- Não mover camadas sem plano.
-- Não padronizar tudo em uma feature pequena.
-- Não introduzir framework novo sem justificativa forte.
-- Não quebrar contratos existentes sem plano de migração.
+- Do not move layers without a plan.
+- Do not standardize everything inside a small feature.
+- Do not introduce a new framework without a strong reason.
+- Do not break existing contracts without a migration plan.
